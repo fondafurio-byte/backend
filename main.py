@@ -24,6 +24,7 @@ FROM_EMAIL = os.getenv("FROM_EMAIL")
 app = FastAPI()
 
 def send_verification_email(to_email, verify_url):
+    import logging
     msg = EmailMessage()
     msg['Subject'] = "Conferma la tua registrazione"
     msg['From'] = FROM_EMAIL
@@ -31,10 +32,14 @@ def send_verification_email(to_email, verify_url):
     msg.set_content(f"Clicca qui per confermare: {verify_url}")
     # msg.add_alternative(...) # puoi aggiungere HTML
 
-    with smtplib.SMTP(SMTP_HOST, SMTP_PORT) as server:
-        server.starttls()
-        server.login(SMTP_USER, SMTP_PASS)
-        server.send_message(msg)
+    try:
+        with smtplib.SMTP(SMTP_HOST, SMTP_PORT) as server:
+            server.starttls()
+            server.login(SMTP_USER, SMTP_PASS)
+            server.send_message(msg)
+        logging.info(f"Email inviata con successo a {to_email}")
+    except Exception as e:
+        logging.error(f"Errore invio email a {to_email}: {e}")
 
 @app.post("/register")
 async def register(email: str = Form(...), password: str = Form(...)):
