@@ -1,4 +1,5 @@
 fastapi
 uvicorn
-httpx
-python-dotenv
+passlib
+python-jose
+jinja2

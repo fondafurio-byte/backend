@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Home - Registrazione</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <h1>Benvenuto!</h1>
+    {% if user %}
+        <p>Ciao, {{ user[1] }}!</p>
+        <a href="/dashboard">Vai alla Dashboard</a> | <a href="/logout">Logout</a>
+    {% else %}
+        <a href="/register">Registrati</a> | <a href="/login">Login</a>
+    {% endif %}
+</body>
+</html>

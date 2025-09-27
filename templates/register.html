@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Registrazione</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <h2>Registrazione Utente</h2>
+    {% if error %}<p style="color:red">{{ error }}</p>{% endif %}
+    <form method="post" action="/register">
+        Email: <input type="email" name="email" required><br>
+        Password: <input type="password" name="password" required><br>
+        <button type="submit">Registrati</button>
+    </form>
+    <a href="/login">Hai già un account? Login</a>
+</body>
+</html>
