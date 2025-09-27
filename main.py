@@ -62,19 +62,23 @@ async def register(email: str = Form(...), password: str = Form(...)):
 @app.get("/verify", response_class=HTMLResponse)
 async def verify(email: str):
     # 4. Aggiorna manualmente il campo confirmed_at su Supabase
+    import logging
     async with httpx.AsyncClient() as client:
         # Prendi l'id utente
         resp = await client.get(
             f"{SUPABASE_URL}/rest/v1/users?email=eq.{email}",
             headers={"apikey": SUPABASE_KEY, "Authorization": f"Bearer {SUPABASE_KEY}"}
         )
-        if resp.status_code != 200 or not resp.json():
-            return "Utente non trovato"
-        user_id = resp.json()[0]['id']
+        logging.info(f"Risposta Supabase: {resp.status_code} - {resp.text}")
+        data = resp.json()
+        if resp.status_code != 200 or not data:
+            return f"Utente non trovato. Risposta Supabase: {resp.text}"
+        user_id = data[0].get('id')
         # Aggiorna confirmed_at
-        await client.patch(
+        patch_resp = await client.patch(
             f"{SUPABASE_URL}/rest/v1/users?id=eq.{user_id}",
             json={"confirmed_at": "now()"},
             headers={"apikey": SUPABASE_KEY, "Authorization": f"Bearer {SUPABASE_KEY}", "Content-Type": "application/json"}
         )
+        logging.info(f"Patch risposta: {patch_resp.status_code} - {patch_resp.text}")
     return "<h1>✅ Verifica completata!</h1>"
