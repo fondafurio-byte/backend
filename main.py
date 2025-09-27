@@ -1,4 +1,5 @@
 import os
+import pathlib
 import sqlite3
 import secrets
 import smtplib
@@ -25,7 +26,8 @@ BASE_URL = os.getenv("BASE_URL", "http://localhost:8000")
 
 app = FastAPI()
 app.mount("/static", StaticFiles(directory="static"), name="static")
-templates = Jinja2Templates(directory="templates")
+BASE_DIR = pathlib.Path(__file__).parent.resolve()
+templates = Jinja2Templates(directory=str(BASE_DIR / "templates"))
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 def init_db():
